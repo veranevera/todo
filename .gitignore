@@ -3,4 +3,3 @@ node_modules/
 out/
 npm-debug.log
 dist/bundle.js
-package.json
