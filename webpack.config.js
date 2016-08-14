@@ -6,13 +6,25 @@ module.exports = {
     entry: [
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',
+    './src/styles/index.styl',
     './src/index.jsx'
     ],
     module: {
         loaders: [{
             test: /\.jsx?$/,
             exclude: /node_modules/,
-            loader: 'react-hot!babel'
+            loaders: [
+                'react-hot',
+                'babel?presets[]=es2015,presets[]=react,presets[]=stage-0&plugins[]=transform-runtime'
+            ]
+        },
+        {
+            test: /\.styl$/,
+            loaders: [
+                'style',
+                'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+                'stylus?linenos=true&resolve url'
+            ]
         }]
     },
     resolve: {
