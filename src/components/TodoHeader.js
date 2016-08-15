@@ -2,6 +2,8 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import TextInput from './ui/TextInput';
 
+import style from './TodoHeader.styl';
+
 export default class TodoHeader extends React.Component {
     /**
      * @constructor
@@ -11,6 +13,14 @@ export default class TodoHeader extends React.Component {
         super(props);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
+
+    _handleKeyPress(e) {
+        if (e.key === 'Enter' && this.refs.addTodoInput.value !== '') {
+            const itemText = this.refs.addTodoInput.value;
+            this.refs.addTodoInput.value = '';
+            return this.props.addItem(itemText);
+        }
+    }
     /**
      * Render component TodoHeader
      * @return {JSX} - Output header
@@ -19,10 +29,11 @@ export default class TodoHeader extends React.Component {
         return (
             <header className="header">
                 <h1>Список дел</h1>
-                <TextInput classes="newTodo"
+                <input className={style.input}
                     ref="addTodoInput"
                     autoComplete="off"
-                    placeholder="Что бы Вы хотели сделать?"  />
+                    placeholder="Что бы Вы хотели сделать?"
+                    onKeyPress={this._handleKeyPress} />
             </header>
         )
     }

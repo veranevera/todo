@@ -35,6 +35,9 @@ module.exports = {
         publicPath: '/',
         filename: 'bundle.js'
     },
+    node: {
+        fs: "empty"
+    },
     devServer: {
         contentBase: './dist',
         hot: true
