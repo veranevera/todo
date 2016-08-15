@@ -1,28 +1,47 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {List, Map} from 'immutable';
 import {compose, createStore} from 'redux';
 import {Provider} from 'react-redux';
-import reducer from './reducers';
+import reducers from './reducers';
+import {saveState, loadState} from './lib/localStorage';
+
 import {TodoAppContainer} from './components/TodoApp';
 
 /**
  * Add data to ToDo application
  */
 
-const createStoreDevTools = compose(
-    window.devToolsExtension ? window.devToolsExtension() : f => f
-)(createStore);
-const store = createStoreDevTools(reducer);
+let store;
+
+if(process.env.NODE_ENV === 'developer') {
+    const createStoreDevTools = compose(
+        window.devToolsExtension ? window.devToolsExtension() : f => f
+    )(createStore);
+    store = createStoreDevTools(reducers);
+} else {
+    let persistedState = loadState();
+    store = createStore(
+        reducers,
+        persistedState
+    );
+}
 
 store.dispatch({
     type: 'SET_STATE',
-    state: {
-        todos: [
-            {id: 1, text: 'Построить дом', status: 'active', editing: false},
-            {id: 2, text: 'Посадить дерево', status: 'active', editing: false},
-            {id: 3, text: 'Вырастить сына', status: 'active', editing: false},
-        ]
-    }
+    state: Map({
+        todos: List.of(
+            Map({id: 1, text: 'Построить дом', status: 'active', editing: false}),
+            Map({id: 2, text: 'Посадить дерево', status: 'active', editing: false}),
+            Map({id: 3, text: 'Вырастить сына', status: 'completed', editing: false})
+        )
+    })
+});
+
+store.subscribe(() => {
+    saveState({
+        todos: store.getState().get('todos')
+    })
 });
 
 /**
