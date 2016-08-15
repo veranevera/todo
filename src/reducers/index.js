@@ -48,7 +48,6 @@ function doneEditing(state, itemId, newText) {
 }
 
 function addItem(state, text) {
-    console.log(state, text);
     const itemId = state.get('todos').reduce((maxId, item) => Math.max(maxId,item.get('id')), 0) + 1;
     const newItem = Map({id: itemId, text: text, status: 'active'});
     return state.update('todos', (todos) => todos.push(newItem));

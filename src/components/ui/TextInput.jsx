@@ -15,10 +15,20 @@ export default class TextInput extends React.Component {
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
 
+    /**
+     * Set value of input field
+     * @returns {object}
+     */
     cancelEditing() {
         this.setState({'value': this.props.text});
         return this.props.cancelEditing(this.props.itemId);
     }
+
+    /**
+     * @param {object} e - key down event
+     * @returns {object}
+     * @private
+     */
     _handleKeyDown(e) {
         switch (e.key) {
             case 'Enter':
@@ -27,12 +37,25 @@ export default class TextInput extends React.Component {
                 return this.cancelEditing();
         }
     }
-    _handleOnBlur(e) {
+
+    /**
+     * Return value before change
+     * @returns {object}
+     * @private
+     */
+    _handleOnBlur() {
         return this.cancelEditing();
     }
+
+    /**
+     * Set value of input field
+     * @param {object} e - change event
+     * @private
+     */
     _handleOnChange(e) {
         this.setState({value: e.target.value});
     }
+
     /**
      * Render component TextInput
      * @return {JSX} - Output input

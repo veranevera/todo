@@ -33,7 +33,7 @@ export default class TodoHeader extends React.Component {
                     ref="addTodoInput"
                     autoComplete="off"
                     placeholder="Что бы Вы хотели сделать?"
-                    onKeyPress={this._handleKeyPress} />
+                    onKeyPress={this._handleKeyPress.bind(this)} />
             </header>
         )
     }

@@ -4,7 +4,10 @@ import TodoItem from './TodoItem';
 import style from './TodoList.styl';
 
 export default class TodoList extends React.Component {
-
+    /**
+     * Get sorted items
+     * @returns {array}
+     */
     getItems() {
         if (this.props.todos) {
             let activeTodos = this.props.todos.filter(
@@ -26,9 +29,14 @@ export default class TodoList extends React.Component {
         return [];
     }
 
+    /**
+     * Check is item completed
+     * @returns {boolean}
+     */
     isCompleted(item) {
         return item.get('status') === 'completed';
     }
+
     /**
      * Render component TodoList
      * @return {JSX} - Output list
@@ -37,17 +45,17 @@ export default class TodoList extends React.Component {
         return (
             <ul className={style.list}>
                 {this.getItems().map((item, idx) =>
-                        <TodoItem key={item.get('id')}
-                            id={item.get('id')}
-                            text={item.get('text')}
-                            isCompleted={this.isCompleted(item)}
-                            isEditing={item.get('editing')}
-                            doneEditing={this.props.doneEditing}
-                            cancelEditing={this.props.cancelEditing}
-                            toggleComplete={this.props.toggleComplete}
-                            deleteItem={this.props.deleteItem}
-                            editItem={this.props.editItem}
-                        />
+                    <TodoItem key={item.get('id')}
+                        id={item.get('id')}
+                        text={item.get('text')}
+                        isCompleted={this.isCompleted(item)}
+                        isEditing={item.get('editing')}
+                        doneEditing={this.props.doneEditing}
+                        cancelEditing={this.props.cancelEditing}
+                        toggleComplete={this.props.toggleComplete}
+                        deleteItem={this.props.deleteItem}
+                        editItem={this.props.editItem}
+                    />
                 )}
             </ul>
         )
