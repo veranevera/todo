@@ -14,7 +14,7 @@ Development
 
 Production
 
-1. Build souces: npm run build
+1. Build sources: npm run build
 
 # Tests
 To start watching tests: npm run test:watch
