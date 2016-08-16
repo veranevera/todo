@@ -11,16 +11,18 @@ import {TodoAppContainer} from './components/TodoApp';
 /**
  * Add data to ToDo application
  */
-
 let store;
+let persistedState = loadState();
 
-if(process.env.NODE_ENV === 'developer') {
+if(NODE_ENV === 'developer') {
     const createStoreDevTools = compose(
         window.devToolsExtension ? window.devToolsExtension() : f => f
     )(createStore);
-    store = createStoreDevTools(reducers);
+    store = createStoreDevTools(
+        reducers,
+        persistedState
+    );
 } else {
-    let persistedState = loadState();
     store = createStore(
         reducers,
         persistedState

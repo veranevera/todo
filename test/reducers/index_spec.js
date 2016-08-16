@@ -51,6 +51,37 @@ describe('reducer', () => {
         }));
     });
 
+    it('handles SET_STATE with plain JS payload from localStorage', () => {
+        const initialState = Map({
+            todos: [
+                {id: 1, text: 'Home', status: 'active'},
+                {id: 2, text: 'Kind', status: 'active'},
+                {id: 3, text: 'Tree', status: 'completed'}
+            ]
+        });
+        const action = {
+            type: 'SET_STATE',
+            state: {
+                todos: [
+
+                    {id: 1, text: 'Home', status: 'completed'},
+                    {id: 2, text: 'Kind', status: 'active'},
+                    {id: 3, text: 'Tree', status: 'completed'},
+                    {id: 4, text: 'Sea', status: 'active'}
+                ]
+            }
+        };
+        const nextState = reducer(initialState, action);
+        expect(nextState).to.equal(fromJS({
+            todos: [
+                {id: 1, text: 'Home', status: 'completed'},
+                {id: 2, text: 'Kind', status: 'active'},
+                {id: 3, text: 'Tree', status: 'completed'},
+                {id: 4, text: 'Sea', status: 'active'}
+            ]
+        }));
+    });
+
     it('handles SET_STATE without initial state', () => {
         const action = {
             type: 'SET_STATE',

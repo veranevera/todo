@@ -1,11 +1,16 @@
 'use strict';
 
 var webpack = require('webpack');
+var dotenv = require('dotenv');
+dotenv.load();
 
-module.exports = {
+const NODE_ENV = process.env.NODE_ENV || 'developer';
+const HOST = process.env.HOST;
+const PORT = process.env.PORT;
+let isDevelopment = NODE_ENV === 'developer';
+
+var webpackConfig = {
     entry: [
-    'webpack-dev-server/client?http://localhost:8080',
-    'webpack/hot/only-dev-server',
     './src/styles/index.styl',
     './src/index.jsx'
     ],
@@ -13,10 +18,13 @@ module.exports = {
         loaders: [{
             test: /\.jsx?$/,
             exclude: /node_modules/,
-            loaders: [
-                'react-hot',
-                'babel?presets[]=es2015,presets[]=react,presets[]=stage-0&plugins[]=transform-runtime'
-            ]
+            loaders: isDevelopment ?
+                [
+                    'react-hot',
+                    'babel?presets[]=es2015,presets[]=react,presets[]=stage-0&plugins[]=transform-runtime'
+                ]
+                :
+                ['strip?strip[]=console.log', 'babel?presets[]=es2015,presets[]=react,presets[]=stage-0']
         },
         {
             test: /\.styl$/,
@@ -38,11 +46,34 @@ module.exports = {
     node: {
         fs: "empty"
     },
-    devServer: {
-        contentBase: './dist',
-        hot: true
-    },
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.DefinePlugin({
+            'NODE_ENV': JSON.stringify(NODE_ENV)
+        })
     ]
 };
+
+if (!isDevelopment) {
+    webpackConfig.plugins.push(
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.UglifyJsPlugin({comments: /a^/, compress: {
+            warnings:     false,
+            drop_console: true,
+            unsafe:       true
+        }}),
+        new webpack.optimize.DedupePlugin()
+    );
+} else {
+    webpackConfig.entry.unshift(
+        'webpack-dev-server/client?http://' + HOST + ':' + PORT + '',
+        'webpack/hot/only-dev-server'
+    );
+    webpackConfig.devServer = {
+        port: PORT,
+        contentBase: './dist',
+        hot: true
+    };
+    webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+}
+
+module.exports = webpackConfig;
